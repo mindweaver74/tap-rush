@@ -167,7 +167,111 @@ html, body {
 .hs { font-weight: 700; }
 .hm { color: rgba(255,255,255,0.35); font-size: 11px; }
 .reset-btn { margin-top: 10px; padding: 7px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer; -webkit-appearance: none; }
+
+/* ── 순위판 ── */
+#lb-panel { display:none; flex-direction:column; align-items:center; width:100%; max-width:300px; }
+#lb-title { font-size:18px; font-weight:700; margin-bottom:12px; }
+#lb-list { width:100%; max-height:260px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.lb-row { display:flex; align-items:center; padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13px; gap:10px; }
+.lb-row:last-child { border-bottom:none; }
+.lb-rank { font-size:16px; font-weight:900; width:28px; text-align:center; flex-shrink:0; }
+.lb-rank.gold   { color:#ffd700; }
+.lb-rank.silver { color:#c0c0c0; }
+.lb-rank.bronze { color:#cd7f32; }
+.lb-name { flex:1; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lb-score { font-weight:700; color:rgba(255,255,255,0.85); flex-shrink:0; }
+.lb-perf  { font-size:11px; color:rgba(255,255,255,0.35); flex-shrink:0; }
+#lb-loading { text-align:center; padding:24px; color:rgba(255,255,255,0.3); font-size:13px; }
+#lb-empty   { text-align:center; padding:24px; color:rgba(255,255,255,0.25); font-size:13px; }
+
+/* 닉네임 입력 모달 */
+#nick-modal {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.75); z-index:200;
+  display:none; align-items:center; justify-content:center;
+  padding:24px;
+}
+#nick-box {
+  background:#1a1a26; border-radius:20px; padding:28px 24px;
+  width:100%; max-width:300px; text-align:center;
+}
+#nick-box h3 { font-size:18px; font-weight:700; margin-bottom:6px; }
+#nick-box p  { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:18px; }
+#nick-input {
+  width:100%; padding:12px 16px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07);
+  color:#fff; font-size:16px; outline:none; margin-bottom:14px;
+  -webkit-appearance:none; text-align:center;
+}
+#nick-input::placeholder { color:rgba(255,255,255,0.3); }
+#nick-submit {
+  width:100%; padding:13px; border-radius:12px; border:none;
+  font-size:16px; font-weight:700; color:#fff; cursor:pointer;
+  -webkit-appearance:none;
+}
+#nick-skip {
+  display:block; margin-top:10px; font-size:12px;
+  color:rgba(255,255,255,0.3); cursor:pointer; background:none;
+  border:none; width:100%; text-align:center;
+}
 </style>
+  <!-- Firebase: onload 체인으로 순서 보장 -->
+  <script>
+    window._db = null;
+    (function() {
+      var cfg = {
+        apiKey: "AIzaSyBZyJlApAO8EdXVkuMX4N8W1KbSZqj2uOI",
+        authDomain: "tap-rush-76ac9.firebaseapp.com",
+        databaseURL: "https://tap-rush-76ac9-default-rtdb.firebaseio.com",
+        projectId: "tap-rush-76ac9",
+        storageBucket: "tap-rush-76ac9.firebasestorage.app",
+        messagingSenderId: "607372363952",
+        appId: "1:607372363952:web:3088b2d690aec63e955375"
+      };
+      var MIRRORS = [
+        'https://www.gstatic.com/firebasejs/10.12.0/',
+        'https://cdn.jsdelivr.net/npm/firebase@10.12.0/'
+      ];
+      var mirrorIdx = 0;
+
+      function tryLoad(base, cb) {
+        loadScript(base + 'firebase-app-compat.js', function(ok1) {
+          if (!ok1) { cb(false); return; }
+          loadScript(base + 'firebase-database-compat.js', function(ok2) {
+            cb(ok2);
+          });
+        });
+      }
+
+      function loadScript(url, cb) {
+        var s = document.createElement('script');
+        s.src = url;
+        s.onload  = function() { cb(true); };
+        s.onerror = function() { console.warn('로드 실패:', url); cb(false); };
+        document.head.appendChild(s);
+      }
+
+      function initFirebase() {
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(cfg);
+          window._db = firebase.database();
+          console.log('Firebase 초기화 완료');
+        } catch(e) { console.warn('Firebase 초기화 실패:', e); }
+      }
+
+      function attemptLoad() {
+        if (mirrorIdx >= MIRRORS.length) {
+          console.warn('모든 CDN 실패');
+          return;
+        }
+        tryLoad(MIRRORS[mirrorIdx], function(ok) {
+          if (ok) { initFirebase(); }
+          else { mirrorIdx++; attemptLoad(); }
+        });
+      }
+      attemptLoad();
+    })();
+  </script>
 </head>
 <body>
 
@@ -202,6 +306,7 @@ html, body {
     <div class="tab on" id="tab-r">게임</div>
     <div class="tab" id="tab-s">스킨</div>
     <div class="tab" id="tab-h">기록</div>
+    <div class="tab" id="tab-lb">순위</div>
   </div>
   <div id="r-panel">
     <div class="result-score" id="r-score">—</div>
@@ -225,9 +330,111 @@ html, body {
     <div id="hlist"></div>
     <button class="reset-btn" id="reset-btn">기록 초기화</button>
   </div>
+
+  <div id="lb-panel">
+    <div id="lb-title">🏆 전체 순위</div>
+    <div id="lb-list"><div id="lb-loading">불러오는 중...</div></div>
+  </div>
 </div>
 
+<!-- 닉네임 모달 -->
+<div id="nick-modal"><div id="nick-box"><h3>점수 등록</h3><p>순위판에 올릴 닉네임을 입력하세요</p><input id="nick-input" type="text" maxlength="10" placeholder="닉네임 (최대 10자)"><button id="nick-submit">등록하기</button><button id="nick-skip">건너뛰기</button></div></div>
+
 <script>
+
+// ── 결과 화면 전역 상태 ──
+var _resultIsNew = false;
+var _resultAvgP  = 0;
+
+function showResultOverlay() {
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-best').textContent  = _resultIsNew ? '🏆 신기록!' : '최고: ' + bestScore + '점';
+  document.getElementById('r-stats').style.display = 'flex';
+  document.getElementById('rs-taps').textContent  = totalTaps;
+  document.getElementById('rs-perf').textContent  = perfectCount;
+  document.getElementById('rs-avg').textContent   = _resultAvgP + '%';
+  document.getElementById('rs-combo').textContent = maxCombo;
+  startBtn.textContent = '다시하기';
+  bestDisp.textContent = bestScore;
+  showTab('r');
+  overlayEl.style.display = 'flex';
+}
+
+// ── Firebase db 참조 ──
+var db = null;
+// Firebase 준비될 때까지 폴링 (최대 5초)
+(function waitDB() {
+  if (window._db) { db = window._db; return; }
+  setTimeout(waitDB, 100);
+})();
+
+// ── 순위판 로드 ──
+function loadLeaderboard() {
+  var listEl = document.getElementById('lb-list');
+  listEl.innerHTML = '<div id="lb-loading">불러오는 중...</div>';
+  if (!db) { listEl.innerHTML = '<div id="lb-empty">연결 실패. 인터넷을 확인하세요.</div>'; return; }
+  db.ref('scores').orderByChild('score').limitToLast(20).once('value')
+    .then(function(snap) {
+      var rows = [];
+      snap.forEach(function(child) { rows.push(child.val()); });
+      rows.reverse(); // 높은 점수 먼저
+      if (!rows.length) {
+        listEl.innerHTML = '<div id="lb-empty">아직 등록된 점수가 없어요</div>';
+        return;
+      }
+      listEl.innerHTML = rows.map(function(r, i) {
+        var rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+        var rankIcon  = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'';
+        return '<div class="lb-row">' +
+          '<div class="lb-rank ' + rankClass + '">' + rankIcon + '</div>' +
+          '<div class="lb-name">' + escHtml(r.name) + '</div>' +
+          '<div class="lb-score">' + r.score + '점</div>' +
+          '<div class="lb-perf">P:' + (r.perfect||0) + '</div>' +
+        '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      listEl.innerHTML = '<div id="lb-empty">불러오기 실패. 인터넷을 확인하세요.</div>';
+    });
+}
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+// ── 점수 등록 ──
+function submitScore(name, scoreVal, perfectVal) {
+  if (!db) { console.warn('DB 없음, 점수 저장 실패'); return; }
+  db.ref('scores').push({
+    name: name,
+    score: scoreVal,
+    perfect: perfectVal,
+    ts: Date.now()
+  });
+}
+
+// ── 닉네임 모달 ──
+var pendingScore = null;
+var pendingPerf  = null;
+
+function showNickModal(s, p) {
+  pendingScore = s;
+  pendingPerf  = p;
+  var modal = document.getElementById('nick-modal');
+  var input = document.getElementById('nick-input');
+  // 저장된 닉네임 불러오기
+  var saved = localStorage.getItem('pNick') || '';
+  input.value = saved;
+  modal.style.display = 'flex';
+  setTimeout(function(){ input.focus(); }, 300);
+}
+
+function closeNickModal() {
+  document.getElementById('nick-modal').style.display = 'none';
+}
+
 // ── 스킨 정의 ──
 var SKINS = [
   {id:'cyber', name:'사이버', grad:'linear-gradient(135deg,#4af,#a4f)', c1:'60,140,255',  c2:'160,100,255', star:'#4af'},
@@ -438,6 +645,36 @@ addEL(document.getElementById('skin-btn'), 'click', openSkin, false);
 addEL(document.getElementById('reset-btn'), 'touchend', function(e){e.preventDefault();resetAll();}, false);
 addEL(document.getElementById('reset-btn'), 'click', resetAll, false);
 
+// 순위 탭
+addEL(document.getElementById('tab-lb'), 'touchend', function(e){e.preventDefault();showTab('lb');}, false);
+addEL(document.getElementById('tab-lb'), 'click', function(){showTab('lb');}, false);
+
+// 닉네임 모달 버튼
+var nickSubmit = document.getElementById('nick-submit');
+var nickSkip   = document.getElementById('nick-skip');
+var nickInput  = document.getElementById('nick-input');
+
+nickSubmit.style.background = skin.grad;
+addEL(nickSubmit, 'touchend', function(e) {
+  e.preventDefault();
+  var name = nickInput.value.trim();
+  if (!name) { nickInput.focus(); return; }
+  localStorage.setItem('pNick', name);
+  submitScore(name, pendingScore, pendingPerf);
+  closeNickModal();
+  showResultOverlay();
+}, false);
+addEL(nickSubmit, 'click', function() {
+  var name = nickInput.value.trim();
+  if (!name) { nickInput.focus(); return; }
+  localStorage.setItem('pNick', name);
+  submitScore(name, pendingScore, pendingPerf);
+  closeNickModal();
+  showResultOverlay();
+}, false);
+addEL(nickSkip, 'touchend', function(e){e.preventDefault();closeNickModal();showResultOverlay();}, false);
+addEL(nickSkip, 'click', function(){closeNickModal();showResultOverlay();}, false);
+
 // ── 피드백 ──
 var fbTimer = null;
 function showFeedback(txt, color) {
@@ -582,19 +819,12 @@ function endGame(overBoundary) {
   if (gameHistory.length > 20) gameHistory.pop();
   localStorage.setItem('pHist', JSON.stringify(gameHistory));
 
-  setTimeout(function(){
-    document.getElementById('r-score').textContent = score;
-    document.getElementById('r-best').textContent  = isNew ? '🏆 신기록!' : '최고: ' + bestScore + '점';
-    document.getElementById('r-stats').style.display = 'flex';
-    document.getElementById('rs-taps').textContent  = totalTaps;
-    document.getElementById('rs-perf').textContent  = perfectCount;
-    document.getElementById('rs-avg').textContent   = avgP + '%';
-    document.getElementById('rs-combo').textContent = maxCombo;
-    startBtn.textContent = '다시하기';
-    bestDisp.textContent = bestScore;
-    showTab('r');
-    overlayEl.style.display = 'flex';
-  }, 420);
+  // 점수 등록 모달 표시
+  showNickModal(score, perfectCount);
+
+  // 결과 화면 표시에 필요한 값을 전역에 저장
+  _resultIsNew = isNew;
+  _resultAvgP  = avgP;
 }
 
 // ── 게임 시작 ──
@@ -615,15 +845,16 @@ function startGame() {
 
 // ── 탭 전환 ──
 function showTab(t) {
-  ['r','s','h'].forEach(function(id){
+  ['r','s','h','lb'].forEach(function(id){
     var el = document.getElementById(id+'-panel');
     if (el) el.style.display = id===t ? (id==='r'?'block':'flex') : 'none';
   });
   document.querySelectorAll('.tab').forEach(function(el,i){
-    el.classList.toggle('on', ['r','s','h'][i]===t);
+    el.classList.toggle('on', ['r','s','h','lb'][i]===t);
   });
   if (t==='s') buildSkins();
   if (t==='h') buildStats();
+  if (t==='lb') loadLeaderboard();
 }
 
 function buildSkins() {
