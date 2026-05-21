@@ -7,174 +7,69 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>PRECISION</title>
 <style>
-:root {
-  --c1: 60, 140, 255;
-  --c2: 160, 100, 255;
-  --grad: linear-gradient(135deg, #4af, #a4f);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
-
-html, body {
-  width: 100%; height: 100%;
-  background: #0a0a0f;
-  color: #fff;
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  overflow: hidden;
-  touch-action: none;
-}
-
-#wrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 20px;
-  padding-top: max(24px, env(safe-area-inset-top));
-  padding-bottom: max(24px, env(safe-area-inset-bottom));
-}
-
-/* 상단 */
-#top-bar { width: 100%; max-width: 360px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.badge { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer; }
-
-/* 점수 */
-#score-wrap { text-align: center; margin-bottom: 6px; }
-#score { font-size: 60px; font-weight: 900; line-height: 1; letter-spacing: -3px; transition: transform 0.08s; }
-#score.pop { transform: scale(1.15); }
-#best-line { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-#combo { font-size: 17px; font-weight: 700; height: 24px; margin-top: 4px; }
-
-/* 등급 */
-#grade-wrap { text-align: center; min-height: 50px; margin-bottom: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-#grade-label { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; }
-#grade-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-
-/* 스테이지 바 */
-#stage-bar-wrap { width: 100%; max-width: 300px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
-#stage-bar { height: 100%; width: 0%; background: var(--grad); border-radius: 2px; transition: width 0.4s; }
-
-/* 게임 원 영역 */
-#arena {
-  position: relative;
-  width: 240px; height: 240px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  touch-action: none;
-  -webkit-touch-callout: none;
-}
-
-/* 경계선 */
-#boundary {
-  position: absolute;
-  width: 240px; height: 240px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.18);
-  pointer-events: none;
-}
-/* 위험존 (빨간 링) */
-#danger-ring {
-  position: absolute;
-  width: 240px; height: 240px;
-  border-radius: 50%;
-  pointer-events: none;
-  background: radial-gradient(circle, transparent 82%, rgba(255,70,70,0.20) 100%);
-}
-
-/* 성장하는 공 */
-#ball {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(var(--c1), 0.25);
-  border: 2px solid rgba(var(--c1), 0.7);
-  box-shadow: 0 0 16px rgba(var(--c1), 0.35);
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-  /* 크기는 JS가 직접 width/height로 제어 */
-  width: 24px; height: 24px;
-}
-#ball-text { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; }
-
-/* 파티클 */
-.particle {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: fly 0.7s ease-out forwards;
-}
-@keyframes fly {
-  0%   { opacity: 1; transform: translate(0,0) scale(1); }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
-}
-
-/* 피드백 */
-#feedback {
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%) translateY(0);
-  font-size: 24px; font-weight: 900;
-  pointer-events: none;
-  opacity: 0;
-  white-space: nowrap;
-  letter-spacing: -0.5px;
-  z-index: 50;
-}
-
+:root { --grad: linear-gradient(135deg,#4af,#a4f); }
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+html,body{ width:100%; height:100%; background:#0a0a0f; color:#fff; font-family:-apple-system,'Helvetica Neue',Arial,sans-serif; overflow:hidden; touch-action:none; }
+#wrap{ width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; padding-top:max(20px,env(safe-area-inset-top)); padding-bottom:max(20px,env(safe-area-inset-bottom)); }
+#top-bar{ width:100%; max-width:360px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.badge{ background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:5px 14px; font-size:12px; color:rgba(255,255,255,0.5); cursor:pointer; }
+#score-wrap{ text-align:center; margin-bottom:6px; }
+#score{ font-size:60px; font-weight:900; line-height:1; letter-spacing:-3px; transition:transform .08s; }
+#score.pop{ transform:scale(1.15); }
+#best-line{ font-size:12px; color:rgba(255,255,255,0.35); margin-top:2px; }
+#combo{ font-size:17px; font-weight:700; height:24px; margin-top:4px; }
+#grade-wrap{ text-align:center; min-height:50px; margin-bottom:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+#grade-label{ font-size:26px; font-weight:900; letter-spacing:-0.5px; }
+#grade-sub{ font-size:12px; color:rgba(255,255,255,0.4); margin-top:2px; }
+#stage-bar-wrap{ width:100%; max-width:300px; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-bottom:20px; overflow:hidden; }
+#stage-bar{ height:100%; width:0%; background:var(--grad); border-radius:2px; transition:width .4s; }
+#arena{ position:relative; width:240px; height:240px; display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:none; -webkit-touch-callout:none; }
+#boundary{ position:absolute; width:240px; height:240px; border-radius:50%; border:2px solid rgba(255,255,255,0.18); pointer-events:none; }
+#danger-ring{ position:absolute; width:240px; height:240px; border-radius:50%; pointer-events:none; background:radial-gradient(circle, transparent 82%, rgba(255,70,70,0.20) 100%); }
+#ball{ position:absolute; border-radius:50%; display:flex; align-items:center; justify-content:center; pointer-events:none; width:24px; height:24px; }
+#ball-text{ font-size:13px; font-weight:700; color:rgba(255,255,255,0.85); white-space:nowrap; }
+.particle{ position:fixed; border-radius:50%; pointer-events:none; animation:fly .7s ease-out forwards; }
+@keyframes fly{ 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0.2)} }
+#feedback{ position:fixed; top:30%; left:50%; transform:translateX(-50%); font-size:24px; font-weight:900; pointer-events:none; opacity:0; white-space:nowrap; letter-spacing:-0.5px; z-index:50; }
 /* 오버레이 */
-#overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(8,8,14,0.97);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 100; text-align: center; padding: 24px;
-  padding-top: max(24px, env(safe-area-inset-top));
-  padding-bottom: max(24px, env(safe-area-inset-bottom));
-  -webkit-overflow-scrolling: touch;
-}
-.ov-title { font-size: 46px; font-weight: 900; letter-spacing: -2px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
-.ov-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 20px; line-height: 1.7; }
-.result-score { font-size: 76px; font-weight: 900; line-height: 1; }
-.result-label { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-.result-best { font-size: 13px; color: #f0c040; height: 20px; margin-top: 6px; }
-.stat-row { display: flex; gap: 8px; margin: 16px 0; width: 100%; max-width: 320px; }
-.stat-box { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 4px; text-align: center; }
-.stat-val { font-size: 20px; font-weight: 700; }
-.stat-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-#start-btn { display: block; padding: 16px 48px; border-radius: 50px; border: none; font-size: 17px; font-weight: 700; cursor: pointer; background: var(--grad); color: white; -webkit-appearance: none; appearance: none; margin-top: 8px; min-width: 200px; position: relative; z-index: 110; }
-.tip { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 12px; line-height: 1.8; }
-
-#tab-bar { display: flex; margin-bottom: 16px; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 3px; }
-.tab { padding: 7px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: rgba(255,255,255,0.4); }
-.tab.on { background: rgba(255,255,255,0.1); color: white; }
-
-#skin-panel { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 300px; }
-#skin-panel p { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
-.skin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; width: 100%; }
-.skin-card { border-radius: 14px; padding: 12px 8px; text-align: center; cursor: pointer; border: 2px solid transparent; background: rgba(255,255,255,0.04); }
-.skin-card.on { border-color: rgba(255,255,255,0.5); }
-.skin-dot { width: 36px; height: 36px; border-radius: 50%; margin: 0 auto 7px; }
-.skin-name { font-size: 11px; color: rgba(255,255,255,0.6); }
-
-#stats-panel { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 300px; }
-.sg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-bottom: 10px; }
-.sc { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px; }
-.sv { font-size: 24px; font-weight: 700; margin-bottom: 2px; }
-.sl { font-size: 11px; color: rgba(255,255,255,0.4); }
-#hlist { width: 100%; max-height: 130px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-.hi { display: flex; justify-content: space-between; padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
-.hi:last-child { border-bottom: none; }
-.hs { font-weight: 700; }
-.hm { color: rgba(255,255,255,0.35); font-size: 11px; }
-.reset-btn { margin-top: 10px; padding: 7px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer; -webkit-appearance: none; }
-
-
+#overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(8,8,14,0.97); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; text-align:center; padding:24px; padding-top:max(24px,env(safe-area-inset-top)); padding-bottom:max(24px,env(safe-area-inset-bottom)); }
+.ov-title{ font-size:46px; font-weight:900; letter-spacing:-2px; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:4px; }
+.ov-sub{ font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:20px; line-height:1.7; }
+.result-score{ font-size:76px; font-weight:900; line-height:1; }
+.result-label{ font-size:12px; color:rgba(255,255,255,0.35); margin-top:2px; }
+.result-best{ font-size:13px; color:#f0c040; height:20px; margin-top:6px; }
+.stat-row{ display:flex; gap:8px; margin:14px 0; width:100%; max-width:320px; }
+.stat-box{ flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 4px; text-align:center; }
+.stat-val{ font-size:20px; font-weight:700; }
+.stat-lbl{ font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px; }
+#start-btn{ display:block; padding:14px 46px; border-radius:50px; border:none; font-size:17px; font-weight:700; cursor:pointer; background:var(--grad); color:white; -webkit-appearance:none; appearance:none; margin-top:6px; min-width:200px; position:relative; z-index:110; }
+.tip{ font-size:11px; color:rgba(255,255,255,0.2); margin-top:12px; line-height:1.8; }
+#tab-bar{ display:flex; margin-bottom:16px; background:rgba(255,255,255,0.05); border-radius:10px; padding:3px; }
+.tab{ padding:7px 18px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; color:rgba(255,255,255,0.4); }
+.tab.on{ background:rgba(255,255,255,0.1); color:white; }
+#r-panel{ display:block; }
+#s-panel{ display:none; flex-direction:column; align-items:center; width:100%; max-width:300px; }
+#h-panel{ display:none; flex-direction:column; align-items:center; width:100%; max-width:300px; }
+#s-panel p{ font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:12px; }
+.skin-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; }
+.skin-card{ border-radius:14px; padding:12px 8px; text-align:center; cursor:pointer; border:2px solid transparent; background:rgba(255,255,255,0.04); }
+.skin-card.on{ border-color:rgba(255,255,255,0.5); }
+.skin-dot{ width:36px; height:36px; border-radius:50%; margin:0 auto 7px; }
+.skin-name{ font-size:11px; color:rgba(255,255,255,0.6); }
+.sg{ display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; margin-bottom:10px; }
+.sc{ background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px; }
+.sv{ font-size:24px; font-weight:700; margin-bottom:2px; }
+.sl{ font-size:11px; color:rgba(255,255,255,0.4); }
+#hlist{ width:100%; max-height:130px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.hi{ display:flex; justify-content:space-between; padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px; }
+.hi:last-child{ border-bottom:none; }
+.hs{ font-weight:700; }
+.hm{ color:rgba(255,255,255,0.35); font-size:11px; }
+.reset-btn{ margin-top:10px; padding:7px 18px; border-radius:20px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:rgba(255,255,255,0.4); font-size:12px; cursor:pointer; -webkit-appearance:none; }
 </style>
 </head>
 <body>
-
 <div id="feedback"></div>
-
 <div id="wrap">
   <div id="top-bar">
     <div class="badge" id="stage-badge">STAGE <span id="stage-num">1</span></div>
@@ -227,266 +122,319 @@ html, body {
     <div id="hlist"></div>
     <button class="reset-btn" id="reset-btn">기록 초기화</button>
   </div>
-    <div id="lb-list"><div id="lb-loading">불러오는 중...</div></div>
-  </div>
 </div>
 
-
 <script>
-
-
-// ── 순위판 로드 ──
-function loadLeaderboard() {
-  var listEl = document.getElementById('lb-list');
-  listEl.innerHTML = '<div id="lb-loading">불러오는 중...</div>';
-  if (!db) { listEl.innerHTML = '<div id="lb-empty">연결 실패. 인터넷을 확인하세요.</div>'; return; }
-  db.ref('scores').orderByChild('score').limitToLast(20).once('value')
-    .then(function(snap) {
-      var rows = [];
-      snap.forEach(function(child) { rows.push(child.val()); });
-      rows.reverse(); // 높은 점수 먼저
-      if (!rows.length) {
-        listEl.innerHTML = '<div id="lb-empty">아직 등록된 점수가 없어요</div>';
-        return;
-      }
-      listEl.innerHTML = rows.map(function(r, i) {
-        var rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-        var rankIcon  = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'';
-        return '<div class="lb-row">' +
-          '<div class="lb-rank ' + rankClass + '">' + rankIcon + '</div>' +
-          '<div class="lb-name">' + escHtml(r.name) + '</div>' +
-          '<div class="lb-score">' + r.score + '점</div>' +
-          '<div class="lb-perf">P:' + (r.perfect||0) + '</div>' +
-        '</div>';
-      }).join('');
-    })
-    .catch(function() {
-      listEl.innerHTML = '<div id="lb-empty">불러오기 실패. 인터넷을 확인하세요.</div>';
-    });
-}
-
-function escHtml(s) {
-  return String(s).replace(/[&<>"']/g, function(c) {
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-  });
-}
-
-// ── 점수 등록 ──
-
-// ── 스킨 정의 ──
-var SKINS = [
-  {id:'cyber', name:'사이버', grad:'linear-gradient(135deg,#4af,#a4f)', c1:'60,140,255',  c2:'160,100,255', star:'#4af'},
-  {id:'fire',  name:'파이어', grad:'linear-gradient(135deg,#f84,#f44)', c1:'255,120,50',  c2:'255,60,60',   star:'#f84'},
-  {id:'neon',  name:'네온',   grad:'linear-gradient(135deg,#0f9,#0cf)', c1:'0,210,140',   c2:'0,190,255',   star:'#0f9'},
-  {id:'rose',  name:'로즈',   grad:'linear-gradient(135deg,#f4a,#a4f)', c1:'240,90,180',  c2:'180,100,255', star:'#f4a'},
-  {id:'gold',  name:'골드',   grad:'linear-gradient(135deg,#fa4,#f84)', c1:'255,190,40',  c2:'255,120,40',  star:'#fa4'},
-  {id:'ice',   name:'아이스', grad:'linear-gradient(135deg,#8cf,#acf)', c1:'120,190,255', c2:'180,200,255', star:'#8cf'},
+var SKINS=[
+  {id:'cyber',name:'사이버',grad:'linear-gradient(135deg,#4af,#a4f)',c1:'60,140,255',  star:'#4af'},
+  {id:'fire', name:'파이어',grad:'linear-gradient(135deg,#f84,#f44)',c1:'255,120,50',  star:'#f84'},
+  {id:'neon', name:'네온',  grad:'linear-gradient(135deg,#0f9,#0cf)',c1:'0,210,140',   star:'#0f9'},
+  {id:'rose', name:'로즈',  grad:'linear-gradient(135deg,#f4a,#a4f)',c1:'240,90,180',  star:'#f4a'},
+  {id:'gold', name:'골드',  grad:'linear-gradient(135deg,#fa4,#f84)',c1:'255,190,40',  star:'#fa4'},
+  {id:'ice',  name:'아이스',grad:'linear-gradient(135deg,#8cf,#acf)',c1:'120,190,255', star:'#8cf'},
 ];
-var skin = SKINS[0];
+var skin=SKINS[0];
 
-// ── 상수 ──
-var BOUNDARY_R = 117;  // 경계선 반지름 px
-var BALL_MIN   = 12;   // 공 최소 반지름
-var T_START    = 3.0;  // 초기 팽창 시간(초)
-var T_MIN      = 0.7;  // 최소 팽창 시간
-var T_STEP     = 0.14; // 스테이지당 감소
-
-var GRADES = [
-  {min:0.95, label:'PERFECT ✦', color:'#ffffff', pts:100},
-  {min:0.85, label:'GREAT',     color:'#ffc800', pts:60},
-  {min:0.70, label:'GOOD',      color:'#44aaff', pts:30},
-  {min:0.50, label:'OK',        color:'#88aaff', pts:12},
-  {min:0,    label:'TOO EARLY', color:'#666666', pts:2},
+var BOUNDARY_R=117, BALL_MIN=12;
+var T_START=3.0, T_MIN=0.7, T_STEP=0.14;
+var GRADES=[
+  {min:0.95,label:'PERFECT ✦',color:'#ffffff',pts:100},
+  {min:0.85,label:'GREAT',    color:'#ffc800',pts:60},
+  {min:0.70,label:'GOOD',     color:'#44aaff',pts:30},
+  {min:0.50,label:'OK',       color:'#88aaff',pts:12},
+  {min:0,   label:'TOO EARLY',color:'#666666',pts:2},
 ];
 
-// ── 게임 상태 ──
-var score=0, combo=0, maxCombo=0, totalTaps=0, perfectCount=0;
-var prox_list=[];
-var bestScore = +( localStorage.getItem('pBest') || 0 );
-var totalGames = +( localStorage.getItem('pGames') || 0 );
-var gameHistory = JSON.parse( localStorage.getItem('pHist') || '[]' );
-var gameActive = false;
-var stage = 1;
-var expandTime = T_START;
-var roundProgress = 0;
-var lastTime = 0;
-var rafId = 0;
+var score=0,combo=0,maxCombo=0,totalTaps=0,perfectCount=0;
+var proxList=[];
+var bestScore=+(localStorage.getItem('pBest')||0);
+var totalGames=+(localStorage.getItem('pGames')||0);
+var gameHistory=JSON.parse(localStorage.getItem('pHist')||'[]');
+var gameActive=false,stage=1,expandTime=T_START;
+var roundProgress=0,lastTime=0,rafId=0;
 
-// ── DOM ──
-var scoreEl    = document.getElementById('score');
-var comboEl    = document.getElementById('combo');
-var bestDisp   = document.getElementById('best-disp');
-var stageNum   = document.getElementById('stage-num');
-var stageBar   = document.getElementById('stage-bar');
-var arenaEl    = document.getElementById('arena');
-var ballEl     = document.getElementById('ball');
-var ballText   = document.getElementById('ball-text');
-var gradeLabel = document.getElementById('grade-label');
-var gradeSub   = document.getElementById('grade-sub');
-var feedbackEl = document.getElementById('feedback');
-var overlayEl  = document.getElementById('overlay');
-var startBtn   = document.getElementById('start-btn');
+// DOM
+var scoreEl   =document.getElementById('score');
+var comboEl   =document.getElementById('combo');
+var bestDisp  =document.getElementById('best-disp');
+var stageNum  =document.getElementById('stage-num');
+var stageBar  =document.getElementById('stage-bar');
+var arenaEl   =document.getElementById('arena');
+var ballEl    =document.getElementById('ball');
+var ballText  =document.getElementById('ball-text');
+var gradeLabel=document.getElementById('grade-label');
+var gradeSub  =document.getElementById('grade-sub');
+var feedbackEl=document.getElementById('feedback');
+var overlayEl =document.getElementById('overlay');
+var startBtn  =document.getElementById('start-btn');
+bestDisp.textContent=bestScore;
 
-bestDisp.textContent = bestScore;
-
-// ── 테마 적용 ──
-function applySkin() {
-  document.documentElement.style.setProperty('--grad', skin.grad);
-  document.documentElement.style.setProperty('--c1', skin.c1);
-  document.documentElement.style.setProperty('--c2', skin.c2);
-  ballEl.style.background  = 'rgba(' + skin.c1 + ',0.22)';
-  ballEl.style.borderColor  = 'rgba(' + skin.c1 + ',0.7)';
-  ballEl.style.boxShadow    = '0 0 16px rgba(' + skin.c1 + ',0.3)';
-  document.getElementById('stage-bar').style.background = skin.grad;
-  startBtn.style.background = skin.grad;
+function applySkin(){
+  document.documentElement.style.setProperty('--grad',skin.grad);
+  ballEl.style.background ='rgba('+skin.c1+',0.22)';
+  ballEl.style.borderColor='rgba('+skin.c1+',0.7)';
+  ballEl.style.boxShadow  ='0 0 16px rgba('+skin.c1+',0.3)';
+  stageBar.style.background=skin.grad;
+  startBtn.style.background=skin.grad;
 }
 applySkin();
 
-// ── 공 크기/색 업데이트 ──
-function updateBall(p) {
-  var r = BALL_MIN + (BOUNDARY_R - BALL_MIN) * p;
-  var d = r * 2;
-  ballEl.style.width  = d + 'px';
-  ballEl.style.height = d + 'px';
+function lerp(a,b,t){return a+(b-a)*t;}
 
-  var danger = Math.max(0, (p - 0.6) / 0.4);
-  var c1r = Math.round(lerp(+skin.c1.split(',')[0], 255, danger));
-  var c1g = Math.round(lerp(+skin.c1.split(',')[1],  60, danger));
-  var c1b = Math.round(lerp(+skin.c1.split(',')[2],  60, danger));
-  var alpha = (0.22 + 0.65 * p).toFixed(2);
-  var bAlpha = (0.5 + 0.5 * p).toFixed(2);
-  var glow = Math.round(10 + p * 30);
-
-  ballEl.style.background   = 'rgba(' + c1r + ',' + c1g + ',' + c1b + ',' + alpha + ')';
-  ballEl.style.borderColor  = 'rgba(' + c1r + ',' + c1g + ',' + c1b + ',' + bAlpha + ')';
-  ballEl.style.boxShadow    = '0 0 ' + glow + 'px rgba(' + c1r + ',' + c1g + ',' + c1b + ',0.5)';
-  ballEl.style.borderWidth  = Math.round(2 + p * 3) + 'px';
-
-  var fs = Math.max(9, Math.round(10 + r * 0.08));
-  ballText.style.fontSize = fs + 'px';
-  ballText.style.opacity = p < 0.12 ? (p / 0.12).toFixed(2) : '1';
+function updateBall(p){
+  var r=BALL_MIN+(BOUNDARY_R-BALL_MIN)*p;
+  var d=r*2;
+  ballEl.style.width=d+'px'; ballEl.style.height=d+'px';
+  var danger=Math.max(0,(p-0.6)/0.4);
+  var c=skin.c1.split(',');
+  var cr=Math.round(lerp(+c[0],255,danger));
+  var cg=Math.round(lerp(+c[1],60,danger));
+  var cb=Math.round(lerp(+c[2],60,danger));
+  var al=(0.22+0.65*p).toFixed(2);
+  var bl=(0.5+0.5*p).toFixed(2);
+  var glow=Math.round(10+p*30);
+  ballEl.style.background ='rgba('+cr+','+cg+','+cb+','+al+')';
+  ballEl.style.borderColor='rgba('+cr+','+cg+','+cb+','+bl+')';
+  ballEl.style.boxShadow  ='0 0 '+glow+'px rgba('+cr+','+cg+','+cb+',0.5)';
+  ballEl.style.borderWidth=Math.round(2+p*3)+'px';
+  ballText.style.fontSize=Math.max(9,Math.round(10+r*0.08))+'px';
+  ballText.style.opacity=p<0.12?(p/0.12).toFixed(2):'1';
 }
 
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-// ── 라운드 루프 ──
-function roundLoop(ts) {
-  if (!gameActive) return;
-  if (lastTime === 0) lastTime = ts;
-  var dt = Math.min((ts - lastTime) / 1000, 0.1); // 최대 100ms cap
-  lastTime = ts;
-
-  roundProgress = Math.min(roundProgress + dt / expandTime, 1);
+function roundLoop(ts){
+  if(!gameActive)return;
+  if(lastTime===0)lastTime=ts;
+  var dt=Math.min((ts-lastTime)/1000,0.1);
+  lastTime=ts;
+  roundProgress=Math.min(roundProgress+dt/expandTime,1);
   updateBall(roundProgress);
-
-  if (roundProgress >= 1) {
-    endGame(true);
-    return;
-  }
-  rafId = requestAnimationFrame(roundLoop);
+  if(roundProgress>=1){endGame(true);return;}
+  rafId=requestAnimationFrame(roundLoop);
 }
 
-function startRound() {
-  if (!gameActive) return;
-  roundProgress = 0;
-  lastTime = 0;
-  expandTime = Math.max(T_MIN, T_START - (stage - 1) * T_STEP);
-  stageNum.textContent = stage;
-  var maxStage = Math.ceil((T_START - T_MIN) / T_STEP) + 1;
-  stageBar.style.width = Math.min((stage - 1) / (maxStage - 1) * 100, 100) + '%';
+function startRound(){
+  if(!gameActive)return;
+  roundProgress=0; lastTime=0;
+  expandTime=Math.max(T_MIN,T_START-(stage-1)*T_STEP);
+  stageNum.textContent=stage;
+  var maxStage=Math.ceil((T_START-T_MIN)/T_STEP)+1;
+  stageBar.style.width=Math.min((stage-1)/(maxStage-1)*100,100)+'%';
   updateBall(0);
   cancelAnimationFrame(rafId);
-  rafId = requestAnimationFrame(roundLoop);
+  rafId=requestAnimationFrame(roundLoop);
 }
 
-// ── 탭 처리 ──
-function handleTap(e) {
-  if (!gameActive) return;
-  if (overlayEl.style.display !== 'none') return;
-  e.preventDefault();
-  e.stopPropagation();
-
+function handleTap(e){
+  if(!gameActive)return;
+  if(overlayEl.style.display!=='none')return;
+  e.preventDefault(); e.stopPropagation();
   cancelAnimationFrame(rafId);
-
-  var p = roundProgress;
-  prox_list.push(p);
-  totalTaps++;
-
-  var grade = GRADES[GRADES.length - 1];
-  for (var i = 0; i < GRADES.length; i++) {
-    if (p >= GRADES[i].min) { grade = GRADES[i]; break; }
-  }
-
-  var pts = grade.pts;
-  combo++;
-  if (combo > maxCombo) maxCombo = combo;
-  if (combo >= 5 && grade.min >= 0.5) pts = Math.round(pts * (1 + combo * 0.05));
-  if (grade.min >= 0.95) perfectCount++;
-
-  score += pts;
-  stage++;
-
-  scoreEl.textContent = score;
-  scoreEl.classList.add('pop');
-  setTimeout(function(){ scoreEl.classList.remove('pop'); }, 90);
-
-  comboEl.textContent = combo >= 3 ? combo + ' COMBO!' : '';
-  comboEl.style.color = combo >= 10 ? '#f84' : combo >= 5 ? 'rgba(' + skin.c1 + ',1)' : '#f0c040';
-
-  gradeLabel.textContent = grade.label;
-  gradeLabel.style.color = grade.color;
-  gradeSub.textContent = '근접도 ' + Math.round(p * 100) + '% · +' + pts + '점';
-
-  showFeedback(grade.label + ' +' + pts, grade.color);
-  spawnParticles(e, grade.color, grade.min >= 0.95 ? 24 : grade.min >= 0.70 ? 14 : 8);
+  var p=roundProgress;
+  proxList.push(p); totalTaps++;
+  var grade=GRADES[GRADES.length-1];
+  for(var i=0;i<GRADES.length;i++){if(p>=GRADES[i].min){grade=GRADES[i];break;}}
+  var pts=grade.pts;
+  combo++; if(combo>maxCombo)maxCombo=combo;
+  if(combo>=5&&grade.min>=0.5)pts=Math.round(pts*(1+combo*0.05));
+  if(grade.min>=0.95)perfectCount++;
+  score+=pts; stage++;
+  scoreEl.textContent=score;
+  scoreEl.classList.add('pop'); setTimeout(function(){scoreEl.classList.remove('pop');},90);
+  comboEl.textContent=combo>=3?combo+' COMBO!':'';
+  comboEl.style.color=combo>=10?'#f84':combo>=5?'rgba('+skin.c1+',1)':'#f0c040';
+  gradeLabel.textContent=grade.label; gradeLabel.style.color=grade.color;
+  gradeSub.textContent='근접도 '+Math.round(p*100)+'% · +'+pts+'점';
+  showFeedback(grade.label+' +'+pts,grade.color);
+  spawnParticles(e,grade.color,grade.min>=0.95?24:grade.min>=0.70?14:8);
   playTone(grade.min);
-
   startRound();
 }
 
-function addEL(el, ev, fn, opts) {
-  if (!el) return;
-  el.addEventListener(ev, fn, opts || false);
+var fbTimer=null;
+function showFeedback(txt,color){
+  feedbackEl.textContent=txt; feedbackEl.style.color=color;
+  feedbackEl.style.opacity='1';
+  feedbackEl.style.transform='translateX(-50%) translateY(-16px)';
+  feedbackEl.style.transition='none';
+  clearTimeout(fbTimer);
+  fbTimer=setTimeout(function(){
+    feedbackEl.style.transition='opacity .4s,transform .4s';
+    feedbackEl.style.opacity='0';
+    feedbackEl.style.transform='translateX(-50%) translateY(-40px)';
+  },500);
 }
 
-// Arena tap
-addEL(arenaEl, 'touchstart', handleTap, {passive: false});
-addEL(arenaEl, 'mousedown',  handleTap, false);
+function spawnParticles(e,color,n){
+  var cx,cy;
+  if(e&&e.touches&&e.touches.length>0){cx=e.touches[0].clientX;cy=e.touches[0].clientY;}
+  else if(e&&e.clientX!==undefined){cx=e.clientX;cy=e.clientY;}
+  else{var r=arenaEl.getBoundingClientRect();cx=r.left+r.width/2;cy=r.top+r.height/2;}
+  for(var i=0;i<n;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    var angle=(Math.PI*2*i/n)+Math.random()*0.5;
+    var dist=40+Math.random()*60;
+    var sz=4+Math.round(Math.random()*6);
+    p.style.cssText='left:'+(cx-sz/2)+'px;top:'+(cy-sz/2)+'px;width:'+sz+'px;height:'+sz+'px;background:'+color+';--dx:'+Math.round(Math.cos(angle)*dist)+'px;--dy:'+Math.round(Math.sin(angle)*dist)+'px;animation-duration:'+(0.5+Math.random()*0.3)+'s';
+    document.body.appendChild(p);
+    setTimeout(function(el){el.parentNode&&el.parentNode.removeChild(el);},900,p);
+  }
+}
 
-// Start button - both touch and click for Safari
-var btnTouched = false;
-addEL(startBtn, 'touchend', function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  btnTouched = true;
-  startGame();
-  setTimeout(function(){ btnTouched = false; }, 600);
-}, false);
-addEL(startBtn, 'click', function(e) {
-  if (btnTouched) return; // touchend가 이미 처리
-  startGame();
-}, false);
+var audioCtx=null;
+function getAC(){
+  if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+  return audioCtx;
+}
+function playTone(minGrade){
+  var ac=getAC(); if(!ac)return;
+  try{
+    var o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);var t=ac.currentTime;
+    if(minGrade>=0.95){
+      [880,1108,1320].forEach(function(f,i){
+        var o2=ac.createOscillator(),g2=ac.createGain();
+        o2.connect(g2);g2.connect(ac.destination);
+        o2.type='sine';o2.frequency.setValueAtTime(f,t+i*0.02);
+        g2.gain.setValueAtTime(0.14,t+i*0.02);g2.gain.exponentialRampToValueAtTime(0.001,t+0.5);
+        o2.start(t+i*0.02);o2.stop(t+0.55);
+      });return;
+    }
+    if(minGrade>=0.85){o.type='triangle';o.frequency.setValueAtTime(660,t);o.frequency.exponentialRampToValueAtTime(990,t+0.08);g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);o.start(t);o.stop(t+0.22);}
+    else if(minGrade>=0.70){o.type='sine';o.frequency.setValueAtTime(528,t);g.gain.setValueAtTime(0.14,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);o.start(t);o.stop(t+0.17);}
+    else{o.type='sine';o.frequency.setValueAtTime(380,t);g.gain.setValueAtTime(0.08,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.1);o.start(t);o.stop(t+0.12);}
+  }catch(e){}
+}
+function playFail(){
+  var ac=getAC();if(!ac)return;
+  try{
+    var o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);var t=ac.currentTime;
+    o.type='sawtooth';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(60,t+0.4);
+    g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+    o.start(t);o.stop(t+0.5);
+  }catch(e){}
+}
 
-// Tabs
-addEL(document.getElementById('tab-r'), 'touchend', function(e){e.preventDefault();showTab('r');}, false);
-addEL(document.getElementById('tab-s'), 'touchend', function(e){e.preventDefault();showTab('s');}, false);
-addEL(document.getElementById('tab-h'), 'touchend', function(e){e.preventDefault();showTab('h');}, false);
-addEL(document.getElementById('tab-r'), 'click', function(){showTab('r');}, false);
-addEL(document.getElementById('tab-s'), 'click', function(){showTab('s');}, false);
-addEL(document.getElementById('tab-h'), 'click', function(){showTab('h');}, false);
+function endGame(overBoundary){
+  gameActive=false; cancelAnimationFrame(rafId); playFail(); comboEl.textContent='';
+  if(overBoundary){
+    ballEl.style.width=(BOUNDARY_R*2)+'px'; ballEl.style.height=(BOUNDARY_R*2)+'px';
+    ballEl.style.background='rgba(255,50,50,0.65)';
+    ballEl.style.borderColor='rgba(255,50,50,0.9)';
+    ballEl.style.boxShadow='0 0 50px rgba(255,50,50,0.8)';
+    var rect=arenaEl.getBoundingClientRect();
+    spawnParticles({clientX:rect.left+rect.width/2,clientY:rect.top+rect.height/2},'#ff5555',28);
+  }
+  var isNew=score>bestScore;
+  if(isNew){bestScore=score;localStorage.setItem('pBest',bestScore);}
+  var avgP=proxList.length?Math.round(proxList.reduce(function(a,b){return a+b;},0)/proxList.length*100):0;
+  totalGames++; localStorage.setItem('pGames',totalGames);
+  gameHistory.unshift({score:score,taps:totalTaps,perf:perfectCount,avg:avgP,combo:maxCombo,date:new Date().toLocaleDateString('ko-KR')});
+  if(gameHistory.length>20)gameHistory.pop();
+  localStorage.setItem('pHist',JSON.stringify(gameHistory));
+  setTimeout(function(){
+    document.getElementById('r-score').textContent=score;
+    document.getElementById('r-best').textContent=isNew?'🏆 신기록!':'최고: '+bestScore+'점';
+    document.getElementById('r-stats').style.display='flex';
+    document.getElementById('rs-taps').textContent=totalTaps;
+    document.getElementById('rs-perf').textContent=perfectCount;
+    document.getElementById('rs-avg').textContent=avgP+'%';
+    document.getElementById('rs-combo').textContent=maxCombo;
+    startBtn.textContent='다시하기';
+    bestDisp.textContent=bestScore;
+    showTab('r');
+    overlayEl.style.display='flex';
+  },420);
+}
 
-// Skin btn
-addEL(document.getElementById('skin-btn'), 'touchend', function(e){e.preventDefault();openSkin();}, false);
-addEL(document.getElementById('skin-btn'), 'click', openSkin, false);
+function startGame(){
+  if(gameActive)return;
+  getAC();
+  score=0;combo=0;maxCombo=0;totalTaps=0;perfectCount=0;proxList=[];stage=1;
+  scoreEl.textContent='0'; bestDisp.textContent=bestScore;
+  comboEl.textContent=''; stageNum.textContent='1';
+  gradeLabel.textContent='준비하세요'; gradeLabel.style.color='rgba(255,255,255,0.5)';
+  gradeSub.textContent='경계선에 가까울수록 고득점';
+  document.getElementById('r-stats').style.display='none';
+  overlayEl.style.display='none';
+  gameActive=true;
+  startRound();
+}
 
-// Reset btn
-addEL(document.getElementById('reset-btn'), 'touchend', function(e){e.preventDefault();resetAll();}, false);
-addEL(document.getElementById('reset-btn'), 'click', resetAll, false);
+function showTab(t){
+  ['r','s','h'].forEach(function(id){
+    var el=document.getElementById(id+'-panel');
+    if(!el)return;
+    el.style.display=id===t?(id==='r'?'block':'flex'):'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.classList.toggle('on',['r','s','h'][i]===t);
+  });
+  if(t==='s')buildSkins();
+  if(t==='h')buildStats();
+}
 
-// ── 초기화 ──
-var sv = localStorage.getItem('pSkin');
-if (sv) { var sk2 = SKINS.find(function(s){return s.id===sv;}); if(sk2){skin=sk2;applySkin();} }
-bestDisp.textContent = bestScore;
+function buildSkins(){
+  var g=document.getElementById('skin-grid'); g.innerHTML='';
+  SKINS.forEach(function(sk){
+    var d=document.createElement('div');
+    d.className='skin-card'+(sk.id===skin.id?' on':'');
+    d.innerHTML='<div class="skin-dot" style="background:'+sk.grad+'"></div><div class="skin-name">'+sk.name+'</div>';
+    addEL(d,'touchstart',function(e){e.preventDefault();setSkin(sk);},{passive:false});
+    addEL(d,'mousedown',function(){setSkin(sk);},false);
+    g.appendChild(d);
+  });
+}
+function setSkin(sk){skin=sk;applySkin();localStorage.setItem('pSkin',sk.id);buildSkins();}
+
+function buildStats(){
+  document.getElementById('sg').innerHTML=
+    '<div class="sc"><div class="sv">'+bestScore+'</div><div class="sl">최고 점수</div></div>'+
+    '<div class="sc"><div class="sv">'+totalGames+'</div><div class="sl">총 게임 수</div></div>'+
+    '<div class="sc"><div class="sv">'+(gameHistory.length?gameHistory[0].perf:0)+'</div><div class="sl">직전 PERFECT</div></div>'+
+    '<div class="sc"><div class="sv">'+(gameHistory.length?gameHistory[0].avg+'%':'—')+'</div><div class="sl">직전 평균 근접도</div></div>';
+  var hl=document.getElementById('hlist');
+  hl.innerHTML=gameHistory.length?gameHistory.map(function(h){
+    return '<div class="hi"><div><span class="hs">'+h.score+'점</span> <span class="hm">PERFECT '+h.perf+' · 평균 '+h.avg+'%</span></div><div class="hm">'+h.date+'</div></div>';
+  }).join(''):'<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.25);font-size:13px">아직 기록이 없어요</div>';
+}
+
+function resetAll(){
+  if(!confirm('모든 기록을 초기화할까요?'))return;
+  bestScore=0;totalGames=0;gameHistory=[];
+  ['pBest','pGames','pHist'].forEach(function(k){localStorage.removeItem(k);});
+  bestDisp.textContent=0; buildStats();
+}
+
+function addEL(el,ev,fn,opts){if(el)el.addEventListener(ev,fn,opts||false);}
+
+// 이벤트 연결
+var btnTouched=false;
+addEL(startBtn,'touchend',function(e){e.preventDefault();e.stopPropagation();btnTouched=true;startGame();setTimeout(function(){btnTouched=false;},600);},false);
+addEL(startBtn,'click',function(){if(btnTouched)return;startGame();},false);
+
+addEL(arenaEl,'touchstart',handleTap,{passive:false});
+addEL(arenaEl,'mousedown',handleTap,false);
+
+addEL(document.getElementById('tab-r'),'touchend',function(e){e.preventDefault();showTab('r');},false);
+addEL(document.getElementById('tab-s'),'touchend',function(e){e.preventDefault();showTab('s');},false);
+addEL(document.getElementById('tab-h'),'touchend',function(e){e.preventDefault();showTab('h');},false);
+addEL(document.getElementById('tab-r'),'click',function(){showTab('r');},false);
+addEL(document.getElementById('tab-s'),'click',function(){showTab('s');},false);
+addEL(document.getElementById('tab-h'),'click',function(){showTab('h');},false);
+
+addEL(document.getElementById('skin-btn'),'touchend',function(e){e.preventDefault();overlayEl.style.display='flex';showTab('s');},false);
+addEL(document.getElementById('skin-btn'),'click',function(){overlayEl.style.display='flex';showTab('s');},false);
+
+addEL(document.getElementById('reset-btn'),'touchend',function(e){e.preventDefault();resetAll();},false);
+addEL(document.getElementById('reset-btn'),'click',resetAll,false);
+
+// 초기화
+var sv=localStorage.getItem('pSkin');
+if(sv){var sk2=SKINS.find(function(s){return s.id===sv;});if(sk2){skin=sk2;applySkin();}}
+bestDisp.textContent=bestScore;
 </script>
 </body>
 </html>
