@@ -2,7 +2,7 @@
 
 > 원이 경계선에 닿기 **직전**에 탭하세요. 가까울수록 고득점!
 
-**▶ 지금 바로 플레이** → [https://mindweaver74.github.io/tap-rush](https://github.com)
+**▶ 지금 바로 플레이** → [https://mindweaver74.github.io/tap-rush](https://mindweaver74.github.io/tap-rush/))
 
 ---
 
